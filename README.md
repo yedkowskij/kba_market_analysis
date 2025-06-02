@@ -12,7 +12,7 @@ Analyse how the structure and sustainability of the German vehicle market evolve
 - Tableau (dashboards)
 
 **Folder layout**
-.
+```.
 ├── data/
 │   ├── raw/          # original XLSX/PDF/CSV
 │   └── processed/    # helper CSVs for COPY
@@ -20,3 +20,4 @@ Analyse how the structure and sustainability of the German vehicle market evolve
 ├── notebooks/        # Jupyter notebooks
 ├── scripts/          # fetch_kba.sh, helpers
 └── docs/             # diagrams, screenshots
+```

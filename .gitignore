@@ -193,12 +193,6 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-data/
-data/raw/
-data/processed/
-*.xlsx
-*.pdf
-*.zip
 
 # dbt build artefacts
 target/
@@ -206,3 +200,14 @@ dbt_packages/
 
 # local env files
 .env
+
+data/
+data/combined/
+data/header_analysis/
+data/Single_file_output/
+data_source/
+data_source/Bestand/
+data_source/Used_cars_kaggle/
+*.xlsx
+*.pdf
+*.zip

@@ -210,9 +210,8 @@ dbt_packages/
 
 
 __pycache__/
-
 .cursor/
-
 dbt_kba/
-
 README_example.md
+./scripts/old
+./scripts/working_final

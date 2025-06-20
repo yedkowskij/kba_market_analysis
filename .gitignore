@@ -193,6 +193,7 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# data
 data/
 data/raw/
 data/processed/
@@ -207,10 +208,15 @@ dbt_packages/
 # local env files
 .env
 
-
-
-./__pycache__/
-./.cursor/
-./dbt_kba/
+# docs
 README_example.md
-./scripts/
+
+# junk
+__pycache__/
+.cursor/
+
+# build artifacts
+dbt_kba/
+scripts/
+target/
+dbt_packages/

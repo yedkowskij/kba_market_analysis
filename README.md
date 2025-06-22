@@ -1,69 +1,100 @@
-# KBA Market Analysis – German Vehicle Registration Trends (2015–2025)
+# KBA Market Analysis Pipeline – German Vehicle Registration Trends (2020–2025)
 
-Comprehensive analysis of German automotive market evolution using official 
-Kraftfahrt-Bundesamt (KBA) vehicle registration data across a decade of transformation.
+> *Comprehensive analysis of German automotive market evolution using official*
+> *Kraftfahrt-Bundesamt (KBA) vehicle registration data across a decade of transformation.*
+
+[![Python](https://img.shields.io/badge/Python-3.9.21-blue.svg)](https://python.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-blue.svg)](https://postgresql.org)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Lab-orange.svg)](https://jupyter.org)
+[![dbt](https://img.shields.io/badge/dbt-Not%20Implemented-red.svg)](https://getdbt.com)
+![Pipeline Status](https://img.shields.io/badge/Pipeline-90%25%20Complete-yellow.svg)
+
+---
+
+## Executive Summary
+
+This repository implements a comprehensive data processing pipeline for analyzing German automotive market data from the Kraftfahrt-Bundesamt (KBA). The system processes **822,248 vehicle registration records** across 15 statistical datasets, transforming complex Excel reports into structured analytics-ready datasets.
+
+**Primary Use Case**: Strategic market analysis for **global manufacturers** evaluating entry into Germany's automotive market.
+
+---
 
 ## Table of Contents
 
 1. [Problem Statement](#problem-statement)
 2. [Solution Overview](#solution-overview)
-3. [Folder Structure](#folder-structure)
-4. [Quickstart](#quickstart)
-5. [Usage Examples](#usage-examples)
-6. [Configuration](#configuration)
-7. [Data Pipeline Workflow](#data-pipeline-workflow)
-8. [Testing & Quality Assurance](#testing--quality-assurance)
-9. [Continuous Integration](#continuous-integration)
-10. [Contributing](#contributing)
-11. [License](#license)
-12. [Roadmap](#roadmap)
-13. [Acknowledgements](#acknowledgements)
+3. [Technology Stack](#technology-stack)
+4. [Folder Structure](#folder-structure)
+5. [Raw Data Sources](#raw-data-sources)
+6. [Data Inventory](#data-inventory)
+7. [Data Quality Framework](#data-quality-framework)
+8. [Data Quality & Governance](#data-quality--governance)
+9. [Business Applications](#business-applications)
+10. [Usage Guide](#usage-guide)
+11. [Command Reference](#command-reference)
+12. [Prerequisites](#prerequisites)
+13. [License & Data Attribution](#license--data-attribution)
 
 ---
 
 ## Problem Statement
 
-The German automotive market underwent significant structural changes between 2015 
+The German automotive market underwent significant structural changes between 2020 
 and 2025, driven by environmental regulations, electrification trends, and shifting 
 consumer preferences. However, analyzing these trends requires processing complex, 
 multi-format official registration data scattered across different KBA statistical 
-series (FZ1, FZ2, FZ3, FZ8, FZ10).
+series (FZ1, FZ2, FZ3, FZ8, FZ10, etc).
 
 Key analytical challenges include:
 - **Data fragmentation**: Multiple Excel formats across different time periods
 - **Schema evolution**: Column structures changed between 2020-2022 and 2023-2025
 - **German formatting**: Decimal separators, special characters, and encoding issues
-- **Scale complexity**: Millions of records across 50+ monthly datasets
+- **Scale complexity**: Hundreds of thousands of records across 50+ monthly datasets
 
 This project delivers a unified analytical framework for automotive market research, 
 policy analysis, and sustainability assessment.
 
 ---
 
-## Solution Overview
+## Data Inventory
 
-The KBA Market Analysis pipeline transforms raw government data into analytical-ready 
-datasets through a multi-stage ETL process:
+### Core Statistical Series (15 datasets, 822,248 records)
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Raw KBA Data  │───▶│  Data Pipeline  │───▶│   Analytics     │
-│   (Excel/PDF)   │    │   (Python/dbt)  │    │ (Jupyter/SQL)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                               │
-                               ▼
-                    ┌─────────────────┐
-                    │   PostgreSQL    │
-                    │   Data Warehouse│
-                    └─────────────────┘
-```
+| Series | Description | Records | Key Dimensions / Business Value |
+|--------|-------------|---------|---------------------------------|
+| **FZ-8.2** | Monthly brand statistics | 2,950 | Market share trends, competitive analysis |
+| **FZ-8.3** | Comprehensive vehicle analysis | 21,821 | Vehicle categories, technical specs / Product positioning insights |
+| **FZ-8.6** | Regional vehicle distribution | 937 | Geographic distribution / Regional market opportunities |
+| **FZ-8.7** | Age and usage analysis | 2,954 | Vehicle age, usage patterns / Replacement cycle insights |
+| **FZ-8.8** | Engine specifications | 1,025 | Engine size, power / Technical positioning |
+| **FZ-8.9** | Commercial vehicle analysis | 2,950 | Commercial categories / Fleet market opportunities |
+| **FZ-8.16** | Special vehicle categories | 2,113 | Specialty vehicles / Niche market identification |
+| **FZ-1.1** | Regional vehicle data | 2,397 | Geographic opportunity mapping |
+| **FZ-1.2** | Administrative breakdown | 2,397 | Administrative units / Policy impact analysis |
+| **FZ-10.1** | Brand/model analysis | 22,683 | Product portfolio gaps |
+| **FZ-2.2** | New registrations by fuel | 77,913 | Electrification transition |
+| **FZ-2.4** | Extended registration metrics | 77,870 | Federal state distribution / Geographic penetration analysis |
+| **FZ-3.1** | Commercial vehicles | 64,657 | Fleet market opportunities |
+| **Trade Names** | Manufacturer registry | 517,656 | Regulatory intelligence |
+| **Model Series** | Vehicle model lookup | 21,925 | Product positioning |
 
-**Architecture Components:**
-- **ETL Layer**: Python scripts for Excel parsing and data standardization
-- **Transformation Layer**: dbt models for data modeling and quality checks
-- **Storage Layer**: PostgreSQL database with optimized schemas  
-- **Analysis Layer**: Jupyter notebooks for exploratory data analysis
-- **Visualization Layer**: Tableau dashboards (external)
+---
+
+### Raw Data Sources
+- **FZ8 PDF Files**: 36 monthly files (2020-2022)
+- **FZ8 Excel Files**: 29 monthly files (2023-2025)
+- **FZ10 Excel Files**: 64 monthly files (2020-2025)
+- **FZ1 Excel Files**: 6 annual files (2020-2025)
+- **FZ2 Excel Files**: 5 annual files (2020-2025)
+- **FZ3 Excel Files**: 7 annual files (2020-2025)
+
+---
+
+### Data Quality Framework
+- **UTF-8 Encoding**: Full German character support (ä, ö, ü handling verified)
+- **Schema Evolution**: Automated handling of format changes between 2020-2022 and 2023-2025 periods
+- **Date Format Consistency**: Multiple formats handled (YYYYMM for FZ8/FZ10, YYYY for FZ1/FZ2/FZ3)
+- **Validation Coverage**: 822,248 total records validated across all datasets
 
 ---
 
@@ -73,28 +104,73 @@ datasets through a multi-stage ETL process:
 kba_market_analysis/
 ├── data/                      # Data storage (gitignored for size)
 │   ├── raw/                   # Original Excel/PDF files from KBA
-│   │   ├── fz1/              # Vehicle stock by make/model
-│   │   ├── fz2/              # New registrations by fuel type
-│   │   ├── fz3/              # Commercial vehicle registrations  
-│   │   ├── fz8/              # Monthly registration statistics
-│   │   └── fz10/             # Regional breakdown data
-│   └── processed/            # Cleaned CSV files for analysis
-├── dbt_kba/                  # dbt project for data modeling
-│   ├── models/               # SQL transformation models
-│   ├── macros/              # Reusable SQL functions
-│   ├── seeds/               # Reference data (lookup tables)
-│   └── dbt_project.yml      # dbt project configuration
-├── notebooks/               # Jupyter analysis notebooks
-│   ├── _1_*.ipynb          # Data extraction workflows
-│   ├── _2_*.ipynb          # Data transformation processes
-│   └── _9_*.ipynb          # Database upload procedures
-├── scripts/                 # Automation and utility scripts
-│   ├── working_final/      # Production ETL notebooks
-│   └── old/                # Deprecated/experimental code
-├── docs/                   # Project documentation
-├── __temp/                 # Temporary files (gitignored)
-└── README.md              # This file
+│   │   ├── fz1/               # Vehicle stock by make/model
+│   │   ├── fz2/               # New registrations by fuel type
+│   │   ├── fz3/               # Commercial vehicle registrations  
+│   │   ├── fz8/               # Monthly registration statistics
+│   │   └── fz10/              # Regional breakdown data
+│   └── processed/             # Cleaned CSV files for analysis
+├── dbt_kba/                   # dbt project for data modeling
+│   ├── models/                # SQL transformation models
+│   ├── macros/                # Reusable SQL functions
+│   ├── seeds/                 # Reference data (lookup tables)
+│   └── dbt_project.yml        # dbt project configuration
+│   └── README.md              # dbt project README file
+├── docs/                      # Project documentation
+│   ├── data-dictionary.md     # field definitions and relationships
+├── notebooks/                 # Jupyter analysis notebooks
+│   ├── _1_*.ipynb             # Data extraction workflows
+│   ├── _2_*.ipynb             # Data transformation processes
+│   ├── ...                    # ...
+│   └── _9_*.ipynb             # Database upload procedures
+├── scripts/                   # Automation and utility scripts
+│   └── old/                   # Deprecated/experimental code
+├── environment.yml            # Defines the conda environment
+├── LICENSE                    # The project’s license file
+├── mkdocs.yml                 # Configuration file for generating project documentation
+├── pyproject.toml             # Modern Python packaging configuration file
+├── requirements.txt           # Standard list of Python dependencies for pip
+└── README.md                  # This file
 ```
+
+---
+
+## Solution Overview
+
+The KBA Market Analysis pipeline transforms raw government data into analytical-ready 
+datasets through a multi-stage ETL process:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   KBA Excel     │    │   Python ETL     │    │   PostgreSQL    │    │   Business      │
+│   Reports       │───▶│   (Jupyter)      │───▶│   Database      │───▶│   Intelligence  │
+│                 │    │                  │    │                 │    │                 │
+│ • 111 files     │    │ • pandas         │    │ • 822K records  │    │ • Tableau       │
+│ • German format │    │ • openpyxl       │    │ • UTF-8         │    │ • Market Entry  │
+│ • Multi-schema  │    │ • Date handling  │    │ • Indexed       │    │ • Competitive   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                        │
+                                ▼                        ▼
+                       ┌──────────────────┐    ┌─────────────────────┐
+                       │   CSV Storage    │    │   dbt Models        │
+                       │   (Processed)    │    │   NOT IMPLEMENTED   │
+                       │                  │    └─────────────────────┘
+                       │ • 15 CSV files   │
+                       │ • 822K records   │                              ┌───────────────────────────┐
+                       │ • Standardized   │────────────────────────────▶ │   Tableau visualization   │
+                       └──────────────────┘                              └───────────────────────────┘
+```
+
+---
+
+### Technology Stack
+- **ETL Layer**: Python 3.9.21, pandas, openpyxl, SQLAlchemy
+- **Storage**: PostgreSQL 13+ with UTF-8 collation, psycopg2-binary driver
+- **Environment**: python-dotenv for configuration management
+- **Transform**: dbt Core 1.0+ (**NOT IMPLEMENTED**)
+- **Analysis**: Jupyter Lab (8 notebooks, 27,930 total lines)
+- **Visualization**: Tableau Desktop (external integration)
+- **Orchestration**: Manual execution (**TODO**: Implement Airflow/Prefect)
 
 ---
 
@@ -102,441 +178,182 @@ kba_market_analysis/
 
 ### Prerequisites
 
-- **Python 3.8+** with pip package manager
-- **PostgreSQL 12+** database server (local or remote)
+- **Python 3.9.21+** with pip package manager
+- **PostgreSQL 13+** database server (local or remote)
+- **Jupyter Lab**
 - **dbt Core 1.0+** for data transformation
 - **Git** for version control
 
-### Installation
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/artur-jodkowski/kba_market_analysis.git
-   cd kba_market_analysis
-   ```
+## Usage Guide
 
-2. **Set up Python environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install pandas openpyxl sqlalchemy python-dotenv
-   ```
+### Production Data Processing Workflow
 
-3. **Configure database connection:**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your PostgreSQL credentials
-   ```
-
-4. **Initialize dbt project:**
-   ```bash
-   cd dbt_kba
-   dbt debug  # Verify database connection
-   ```
-
-### Quick Data Processing
-
+#### Phase 1: Historical Brand Analysis
 ```bash
-# Process a single data source (example: FZ8 2023-2025)
-jupyter notebook scripts/working_final/_2_Artur_fz8_2023-2025.ipynb
+# 1. Legacy format processing (2020-2022)
+jupyter lab notebooks/_1_fz8_2020-2022.ipynb
+# Processes: Older Excel format, schema differences
+# Output: Standardized monthly brand statistics
 
-# Upload processed data to database
-jupyter notebook notebooks/_9_push_processed_data.ipynb
+# 2. Modern format processing (2023-2025) 
+jupyter lab notebooks/_2_fz8_2023-2025.ipynb
+# Processes: Advanced Excel parsing, German formatting, 8 sheet types
+# Output: FZ8.2, 8.3, 8.6, 8.7, 8.8, 8.9, 8.16 series (34,850 total records)
+```
 
-# Run dbt transformations
-cd dbt_kba && dbt run
+#### Phase 2: Market Intelligence
+```bash
+# 3. Brand & Model Intelligence
+jupyter lab notebooks/_3_fz10.ipynb
+# Processes: Manufacturer analysis, model series
+# Output: 22,683 brand/model records, competitive positioning
+
+# 4. Regional Market Analysis  
+jupyter lab notebooks/_4_fz1.ipynb
+# Processes: Federal states, administrative regions
+# Output: 4,794 geographic records (2 datasets)
+```
+
+#### Phase 3: Advanced Analytics
+```bash
+# 5. Fuel Transition Analysis
+jupyter lab notebooks/_5_fz2.ipynb
+# Status: FULLY FUNCTIONAL - processes FZ2.2 and FZ2.4 sheets
+# Output: 155,783 fuel/demographic records across 2 datasets
+# Features: Layout validation, German text normalization, multi-file processing
+
+# 6. Commercial Vehicle Analysis
+jupyter lab notebooks/_6_fz3.ipynb
+# Status: Simple processing, fully operational
+# Output: 64,657 commercial vehicle distribution records
+```
+
+#### Phase 4: Data Warehouse Operations
+```bash
+# 7. Database Upload & Validation
+jupyter lab notebooks/_9_push_processed_data.ipynb
+# Processes: Bulk PostgreSQL upload, schema creation
+# Uses: SQLAlchemy, dotenv_values for environment configuration
+
+jupyter lab notebooks/_99_test_files_from_db.ipynb
+# Processes: Database validation, comprehensive testing
+# Uses: load_dotenv for environment configuration
+# Shows: Data types, completeness, geographic distribution validation
 ```
 
 ---
 
-## Usage Examples
+### Command Reference
 
-### Data Extraction Workflow
+| Operation | Command | Output |
+|-----------|---------|--------|
+| **Legacy Processing** | `jupyter lab notebooks/_1_fz8_2020-2022.ipynb` | Historical brand data |
+| **Modern Processing** | `jupyter lab notebooks/_2_fz8_2023-2025.ipynb` | 8 FZ8 series datasets |
+| **Market Analysis** | `jupyter lab notebooks/_3_fz10.ipynb` | Brand/model intelligence |
+| **Geographic Analysis** | `jupyter lab notebooks/_4_fz1.ipynb` | Regional opportunities |
+| **Fuel Analysis** | `jupyter lab notebooks/_5_fz2.ipynb` | Fuel transition data |
+| **Commercial Analysis** | `jupyter lab notebooks/_6_fz3.ipynb` | Commercial vehicle data | |
+| **Database Upload** | `jupyter lab notebooks/_9_push_processed_data.ipynb` | PostgreSQL integration |
+| **Data Validation** | `jupyter lab notebooks/_99_test_files_from_db.ipynb` | Quality assurance |
+| **dbt Transformation** | `dbt run` | ❌ Not Available | **TODO**: No KBA models exist |
 
-```python
-# Extract FZ8 monthly registration data
-from pathlib import Path
-import pandas as pd
-from openpyxl import load_workbook
+---
 
-# Load monthly KBA Excel file
-data_dir = Path("data/raw/fz8")
-df = pd.read_excel(data_dir / "fz8_202412.xlsx", sheet_name="FZ 8.2")
+## Business Applications
 
-# Apply standardized cleaning
-df = df.dropna(how="all")
-df.columns = df.columns.str.strip().str.upper()
-```
+### Market Entry Decision Support
+- **Competitive Gap Analysis**: Identify underserved SUV segments and price points
+- **Geographic Prioritization**: Target federal states with favorable EV adoption
+- **Product Portfolio Planning**: Optimize model mix based on demand patterns
+- **Timing Strategy**: Leverage 2025 policy tailwinds for market entry
 
-### Database Query Examples
-
+### Sample Business Queries
 ```sql
--- Top 10 vehicle makes by 2024 registrations
-SELECT marke, SUM(anzahl) as total_registrations
-FROM kba_schema.fz_8_2_raw 
-WHERE date LIKE '2024%'
-GROUP BY marke 
-ORDER BY total_registrations DESC 
-LIMIT 10;
+-- Market share by brand (data available in fz_08.2_raw)
+-- Note: FZ8 uses YYYYMM date format (e.g., 202212)
+SELECT "MARKE" as brand, 
+       SUM("ANZAHL") as total_registrations,
+       AVG("CO2-EMISSION IN G/KM") as avg_co2_emissions,
+       SUM("ELEKTRO (BEV)") as electric_vehicles,
+       SUM("HYBRID") as hybrid_vehicles
+FROM "fz_08.2_raw" 
+WHERE "DATE" >= '202401'
+GROUP BY "MARKE" 
+ORDER BY total_registrations DESC;
 
--- Electric vehicle adoption trends
-SELECT date, fuel_type, COUNT(*) as registrations
-FROM kba_schema.fz_2_processed
-WHERE fuel_type IN ('ELEKTRO', 'HYBRID')
-GROUP BY date, fuel_type
-ORDER BY date;
-```
+-- EV adoption by federal state (data available in fz_1.1_raw)
+-- Note: FZ1 uses YYYY date format (e.g., 2020)
+SELECT "LAND" as federal_state,
+       SUM(CAST("PERSONENKRAFTWAGEN" AS INTEGER)) as total_vehicles,
+       AVG("PKW-DICHTE JE 1.000 EINWOHNER") as vehicle_density
+FROM "fz_1.1_raw"
+WHERE "DATE" = '2024'
+GROUP BY "LAND"
+ORDER BY total_vehicles DESC;
 
-### Analysis Notebook Execution
+-- Fuel type analysis by manufacturer (data available in fz_2.2_raw)
+-- Note: FZ2 uses YYYY date format (e.g., 2020)
+SELECT "HERSTELLER" as manufacturer,
+       "KRAFTSTOFFART" as fuel_type,
+       SUM("INSGESAMT") as total_registrations,
+       AVG("HALTERINNEN UND HALTER BIS 29 JAHRE") as young_owners
+FROM "fz_2.2_raw"
+WHERE "DATE" = '2024'
+GROUP BY "HERSTELLER", "KRAFTSTOFFART"
+ORDER BY total_registrations DESC;
 
-```bash
-# Run full analysis pipeline
-jupyter notebook notebooks/_1_Artur_fz8_2020-2022.ipynb  # Legacy data
-jupyter notebook notebooks/_2_Artur_fz8_2023-2025.ipynb  # Current data
-jupyter notebook notebooks/_4_Artur_fz1.ipynb            # Vehicle stock
-```
+-- Model analysis with electrification (data available in fz_10.1_raw)
+-- Note: FZ10 uses YYYYMM date format (e.g., 202504)
+SELECT "MARKE" as brand,
+       "MODELLREIHE" as model_series,
+       SUM("INSGESAMT") as total_registrations,
+       SUM("MIT HYBRIDANTRIEB") as hybrid_vehicles,
+       SUM("MIT ELEKTROANTRIEB") as electric_vehicles,
+       SUM("MIT ALLRADANTRIEB") as awd_vehicles
+FROM "fz_10.1_raw"
+WHERE "DATE" >= '202401'
+GROUP BY "MARKE", "MODELLREIHE"
+ORDER BY total_registrations DESC;
 
----
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file with the following parameters:
-
-```bash
-# PostgreSQL Database Configuration
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USER=your_username
-POSTGRES_PASS=your_password
-POSTGRES_DB=kba_analysis
-POSTGRES_SCHEMA=kba_data
-
-# Optional: Data Source Paths
-KBA_DATA_PATH=/path/to/kba/downloads
-PROCESSED_DATA_PATH=./data/processed
-```
-
-### dbt Configuration
-
-Edit `dbt_kba/dbt_project.yml`:
-
-```yaml
-name: 'kba_market_analysis'
-version: '1.0.0'
-profile: 'default'
-
-models:
-  kba_market_analysis:
-    staging:
-      +materialized: view
-    marts:
-      +materialized: table
-```
-
-### Data Source Configuration
-
-Notebook-specific configurations are embedded in each processing script:
-
-- **FZ8 Configuration**: Monthly registration data processing
-- **FZ1 Configuration**: Annual vehicle stock processing  
-- **Text Column Handling**: Configurable number of preserved text columns
-- **Date Parsing**: Automatic YYYYMM date extraction from filenames
-
----
-
-## Data Pipeline Workflow
-
-### 1. Data Acquisition
-- **Manual Download**: KBA Excel files from official statistics portal
-- **File Organization**: Structured placement in `data/raw/` subdirectories
-- **Format Validation**: Automated sheet detection and structure verification
-
-### 2. Data Extraction & Cleaning
-```mermaid
-graph TD
-    A[Raw Excel Files] --> B[Python ETL Scripts]
-    B --> C[Schema Standardization]
-    C --> D[Text Normalization]
-    D --> E[Numeric Conversion]
-    E --> F[CSV Export]
-```
-
-### 3. Data Transformation (dbt)
-- **Staging Models**: Raw data validation and type casting
-- **Intermediate Models**: Business logic application
-- **Mart Models**: Final analytical datasets
-
-### 4. Data Loading
-- **PostgreSQL Upload**: Automated table creation and data insertion
-- **Schema Management**: Consistent column naming and data types
-- **Incremental Processing**: Month-by-month data updates
-
-### 5. Quality Assurance
-- **Row Count Validation**: Cross-check against source files
-- **Schema Drift Detection**: Automated header comparison
-- **Data Completeness**: Missing value analysis and reporting
-
----
-
-## Testing & Quality Assurance
-
-### Data Quality Checks
-
-Currently implemented through notebook-embedded validation:
-
-```python
-# Example validation from processing notebooks
-def validate_data_completeness(df):
-    """Check for unexpected missing values in key columns"""
-    required_cols = ['MARKE', 'ANZAHL', 'DATE']
-    for col in required_cols:
-        missing_pct = df[col].isna().mean() * 100
-        if missing_pct > 5:
-            print(f"⚠️  {col}: {missing_pct:.1f}% missing values")
-```
-
-### Schema Validation
-
-```python
-# Header compatibility check between data periods
-def validate_headers(df_2020, df_2023):
-    """Ensure schema consistency across time periods"""
-    if list(df_2020.columns) != list(df_2023.columns):
-        print("❌ Schema mismatch detected")
-        return False
-    return True
-```
-
-### TODO: Comprehensive Test Suite
-
-```bash
-# Planned testing framework
-pytest tests/test_data_extraction.py
-pytest tests/test_data_quality.py  
-pytest tests/test_database_upload.py
+-- Commercial vehicle distribution by region (data available in fz_3.1_raw)
+-- Note: FZ3 uses YYYY date format (e.g., 2020)
+SELECT "LAND" as federal_state,
+       SUM("KRAFTRADER") as motorcycles,
+       SUM("PERSONENKRAFTWAGEN") as passenger_cars,
+       SUM("LASTKRAFTWAGEN") as trucks
+FROM "fz_3.1_raw"
+WHERE "DATE" = '2024'
+GROUP BY "LAND"
+ORDER BY passenger_cars DESC;
 ```
 
 ---
 
-## Continuous Integration
+## Data Quality & Governance
 
-**Current Status**: Manual execution workflows
+### Automated Validation Framework
+- **Schema Consistency**: Column types verified in database (object, int64, float64)
+- **Date Format Handling**: Multiple formats supported (YYYYMM for monthly, YYYY for annual)
+- **Business Rules**: Date ranges (2020-2025), registration count boundaries validated
+- **Referential Integrity**: HSN/TSN code verification across 517,656 trade names
+- **Data Freshness**: Monthly FZ8 updates through May 2025, annual series current
 
-**Planned CI/CD Pipeline:**
-
-```yaml
-# .github/workflows/data-pipeline.yml (planned)
-name: KBA Data Pipeline
-on:
-  schedule:
-    - cron: '0 6 1 * *'  # Monthly on 1st at 6 AM
-jobs:
-  data-extraction:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run data extraction
-        run: python scripts/monthly_update.py
-```
-
-**Quality Gates:**
-- Schema validation before database upload
-- Row count verification against previous months
-- Data completeness thresholds (>95% for key fields)
+### Quality Metrics Dashboard
+- **Completeness**: 822,248 / 822,248 records processed (100.0%)
+- **Accuracy**: German character encoding validated across all datasets  
+- **Consistency**: Schema evolution handled between time periods
+- **Geographic Coverage**: 16 federal states, 806 administrative regions covered
+- **Temporal Coverage**: 6 years (2020-2025) with monthly granularity where applicable
 
 ---
 
-## Contributing
+## License & Data Attribution
 
-### Development Setup
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
 
-1. Fork the repository and create a feature branch
-2. Install development dependencies: `pip install -r requirements-dev.txt`
-3. Follow the existing notebook commenting style (every line documented)
-4. Test data processing with sample files before full runs
-
-### Code Style
-
-- **Notebook Comments**: Every code line includes explanatory comments
-- **Function Documentation**: Comprehensive docstrings for all functions
-- **Section Headers**: Clear markdown headers separating workflow stages
-- **Variable Naming**: Descriptive names with consistent prefixes (`pg_`, `df_`, etc.)
-
-### Pull Request Process
-
-1. Ensure notebooks run end-to-end without errors
-2. Update documentation for any configuration changes
-3. Add validation checks for new data sources
-4. Test database upload procedures with sample data
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file 
-for details.
-
-**Data License**: All KBA vehicle registration data remains subject to German 
-federal statistics usage terms. This project provides tools for analysis; users 
-are responsible for compliance with data usage regulations.
-
----
-
-## Roadmap
-
-### Phase 1: Infrastructure Hardening (Q1 2025)
-- [ ] Migrate to Poetry for dependency management
-- [ ] Implement comprehensive pytest test suite
-- [ ] Add CI/CD pipeline with GitHub Actions
-- [ ] Create Docker containers for reproducible environments
-
-### Phase 2: Analysis Expansion (Q2 2025)
-- [ ] Add time series forecasting models
-- [ ] Implement regional analysis workflows
-- [ ] Create automated report generation
-- [ ] Build Streamlit dashboard for interactive exploration
-
-### Phase 3: Production Deployment (Q3 2025)
-- [ ] Cloud deployment (AWS/GCP)
-- [ ] Automated KBA data ingestion
-- [ ] Real-time dashboard updates
-- [ ] API endpoint for external consumers
-
----
-
-## Acknowledgements
-
-### Data Sources
-- **Kraftfahrt-Bundesamt (KBA)**: Official German vehicle registration statistics
-- **Federal Statistical Office**: Supporting demographic and economic indicators
-
-### Technical References
-- **dbt Documentation**: Data transformation best practices
-- **pandas Documentation**: Data manipulation techniques
-- **PostgreSQL Manual**: Database optimization strategies
-
-### Contributors
-- **Artur Jodkowski**: Project lead and primary analyst
-- **NeuesFische**: Educational framework and mentorship
-
----
-
-## Brutally Honest Recommendations
-
-### Critical Issues Requiring Immediate Attention
-
-#### 1. **Missing Requirements Management** (High Impact, Low Effort)
-**Problem**: No `requirements.txt`, `pyproject.toml`, or dependency specification.  
-**Impact**: Potential environment conflicts, difficult onboarding, version drift.  
-**Fix**: Create `requirements.txt` with pinned versions:
-```bash
-pandas==2.1.4
-openpyxl==3.1.2
-sqlalchemy==2.0.25
-python-dotenv==1.0.0
-psycopg2-binary==2.9.9
-```
-
-#### 2. **Hardcoded Database Credentials Risk** (High Impact, Medium Effort)
-**Problem**: `.env` files referenced but not templated; risk of credential exposure.  
-**Impact**: Security vulnerability, accidental credential commits.  
-**Fix**: Create `.env.example` template and update gitignore validation.
-
-#### 3. **Notebook-Driven Architecture Smell** (Medium Impact, High Effort)
-**Problem**: Core ETL logic embedded in Jupyter notebooks instead of modules.  
-**Impact**: Poor testability, difficult CI/CD, code duplication across notebooks.  
-**Fix**: Extract processing functions to `src/kba_pipeline/` Python package.
-
-#### 4. **dbt Project Misconfiguration** (Medium Impact, Low Effort)
-**Problem**: dbt project still uses default `my_new_project` name and minimal config.  
-**Impact**: Confusion, non-descriptive artifacts, poor maintainability.  
-**Fix**: Update `dbt_project.yml` with proper project name and model configurations.
-
-#### 5. **Zero Automated Testing** (High Impact, Medium Effort)
-**Problem**: No test coverage for data processing, schema validation, or database operations.  
-**Impact**: Silent data corruption, regression risks, difficult debugging.  
-**Fix**: Implement pytest suite starting with schema validation tests.
-
-#### 6. **Data Quality Validation Gaps** (Medium Impact, Medium Effort)
-**Problem**: Ad-hoc validation scattered across notebooks without systematic approach.  
-**Impact**: Data quality issues may propagate undetected through pipeline.  
-**Fix**: Implement dbt tests and data quality monitoring framework.
-
-### Architectural Improvements (Ordered by Impact/Effort Ratio)
-
-#### 1. **Containerization** (High Impact, Medium Effort)
-Create `Dockerfile` and `docker-compose.yml` for reproducible environments:
-```dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-```
-
-#### 2. **Configuration Management** (Medium Impact, Low Effort)
-Replace scattered path configurations with centralized `config.yaml`:
-```yaml
-data:
-  raw_dir: "data/raw"
-  processed_dir: "data/processed"
-database:
-  schema: "kba_data"
-processing:
-  batch_size: 10000
-```
-
-#### 3. **Logging Framework** (Medium Impact, Low Effort)
-Replace `print()` statements with structured logging:
-```python
-import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-```
-
-#### 4. **Error Handling Robustness** (High Impact, Medium Effort)
-Current notebooks have minimal error handling; add comprehensive exception management and rollback procedures.
-
-#### 5. **Memory Optimization** (Low Impact, High Effort)
-For large datasets, implement chunked processing and memory profiling to handle files exceeding available RAM.
-
-### Security & Compliance Red Flags
-
-#### 1. **Unencrypted Database Connections** (High Risk)
-Verify PostgreSQL connections use SSL/TLS in production environments.
-
-#### 2. **Data Retention Policy Missing** (Medium Risk)
-No documented data retention or deletion procedures for GDPR compliance.
-
-#### 3. **Access Control Gaps** (Medium Risk)
-Database schema lacks role-based access controls for different user types.
-
-### Performance Bottlenecks
-
-#### 1. **Single-Threaded Processing** (High Impact)
-Excel parsing could benefit from parallel processing for monthly batch updates.
-
-#### 2. **Inefficient DataFrame Operations** (Medium Impact)
-Multiple `apply()` operations could be vectorized for better performance.
-
-#### 3. **Unoptimized Database Uploads** (Medium Impact)
-Current bulk uploads lack batch optimization and connection pooling.
-
-### Benchmark Against Industry Standards
-
-**Current Grade: C+ (Functional but not production-ready)**  
-
-To reach **A-grade** (FAANG-level quality):
-- Implement comprehensive test coverage (>80%)
-- Add monitoring and alerting infrastructure  
-- Create proper API documentation
-- Establish SLA definitions and error budgets
-- Implement feature flags for experimental functionality
-
-**Immediate Priority Order:**
-1. Create `requirements.txt` (30 minutes)
-2. Fix dbt project configuration (15 minutes)  
-3. Add `.env.example` template (10 minutes)
-4. Implement basic pytest structure (2 hours)
-5. Extract notebook functions to modules (1 day)
+**Data Source**: Kraftfahrt-Bundesamt (KBA) - German Federal Motor Transport Authority  
+**License**: German Government Open Data License (Datenlizenz Deutschland – Namensnennung – Version 2.0)  
+**Update Frequency**: Monthly (FZ8, FZ10) and Annual (FZ1, FZ2, FZ3)  
+**Data Coverage**: 2020-2025, 822,248 validated records across 15 statistical datasets

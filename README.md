@@ -160,6 +160,7 @@ kba_market_analysis/
 │   ├── _2_*.ipynb             # Data transformation processes
 │   ├── ...                    # ...
 │   └── _9_*.ipynb             # Database upload procedures
+├── tableau/                   # Tableau analysis workbooks
 ├── LICENSE                    # The project’s license file
 ├── requirements.txt           # Standard list of Python dependencies for pip
 ├── motivation.md              # Project motivation
@@ -230,29 +231,6 @@ WHERE "DATE" = '2024'
 GROUP BY "HERSTELLER", "KRAFTSTOFFART"
 ORDER BY total_registrations DESC;
 
--- Model analysis with electrification (data available in fz_10.1_raw)
--- Note: FZ10 uses YYYYMM date format (e.g., 202504)
-SELECT "MARKE" as brand,
-       "MODELLREIHE" as model_series,
-       SUM("INSGESAMT") as total_registrations,
-       SUM("MIT HYBRIDANTRIEB") as hybrid_vehicles,
-       SUM("MIT ELEKTROANTRIEB") as electric_vehicles,
-       SUM("MIT ALLRADANTRIEB") as awd_vehicles
-FROM "fz_10.1_raw"
-WHERE "DATE" >= '202401'
-GROUP BY "MARKE", "MODELLREIHE"
-ORDER BY total_registrations DESC;
-
--- Commercial vehicle distribution by region (data available in fz_3.1_raw)
--- Note: FZ3 uses YYYY date format (e.g., 2020)
-SELECT "LAND" as federal_state,
-       SUM("KRAFTRADER") as motorcycles,
-       SUM("PERSONENKRAFTWAGEN") as passenger_cars,
-       SUM("LASTKRAFTWAGEN") as trucks
-FROM "fz_3.1_raw"
-WHERE "DATE" = '2024'
-GROUP BY "LAND"
-ORDER BY passenger_cars DESC;
 ```
 
 ---

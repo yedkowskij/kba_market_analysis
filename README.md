@@ -194,7 +194,7 @@ kba_market_analysis/
 - **Competitive landscape**: Performance of top models by segment
 - **Geographic Prioritization**: Target federal states with favorable EV adoption
 
-The **goal** is to derive insights that support **early-stage decision-making for a market entry strategy** by an international EV/Hybrid SUV manufacturer
+The **goal** is to derive insights that support **early-stage decision-making for a market entry strategy** by an international EV/Hybrid Automotive manufacturer
 
 ### Sample Business Queries (SQL)
 ```sql

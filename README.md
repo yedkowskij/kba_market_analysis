@@ -50,6 +50,9 @@ Key analytical challenges include:
 - **Referential Integrity**: HSN/TSN code verification across 517,656 trade names
 - **Scale complexity**: Hundreds of thousands of records across 50+ monthly datasets
 
+Code application can be found
+  [here](./notebooks/_2_fz8_2023-2025.ipynb)
+
 ---
 
 ## Solution Overview

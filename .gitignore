@@ -215,6 +215,7 @@ README_example.md
 __pycache__/
 .cursor/
 __delete/
+.DS_Store
 
 # build artifacts
 dbt_kba/

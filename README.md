@@ -15,7 +15,7 @@
 
 This repository implements a comprehensive data processing pipeline for analyzing German automotive market data from the Kraftfahrt-Bundesamt (KBA). The system processes **822,248 vehicle registration records** across 15 statistical datasets, transforming complex Excel reports into structured analytics-ready datasets.
 
-**Primary Use Case**: Strategic market analysis for **global manufacturers** evaluating entry into Germany's automotive market.
+**Primary Use Case**: This analysis focuses on identifying **key market trends** and structural patterns in the **German automotive market from 2020 to 2025**
 
 ---
 
@@ -24,16 +24,13 @@ This repository implements a comprehensive data processing pipeline for analyzin
 1. [Problem Statement](#problem-statement)
 2. [Solution Overview](#solution-overview)
 3. [Technology Stack](#technology-stack)
-4. [Folder Structure](#folder-structure)
+4. [Data Inventory](#data-inventory)
 5. [Raw Data Sources](#raw-data-sources)
-6. [Data Inventory](#data-inventory)
-7. [Data Quality Framework](#data-quality-framework)
-8. [Data Quality & Governance](#data-quality--governance)
+6. [Data Quality Framework](#data-quality-framework)
+7. [Folder Structure](#folder-structure)
+8. [Command & Usage](#command--usage)
 9. [Business Applications](#business-applications)
-10. [Usage Guide](#usage-guide)
-11. [Command Reference](#command-reference)
-12. [Prerequisites](#prerequisites)
-13. [License & Data Attribution](#license--data-attribution)
+10. [License & Data Attribution](#license--data-attribution)
 
 ---
 
@@ -47,12 +44,50 @@ series (FZ1, FZ2, FZ3, FZ8, FZ10, etc).
 
 Key analytical challenges include:
 - **Data fragmentation**: Multiple Excel formats across different time periods
+- **Date Format Handling**: Multiple formats supported (YYYYMM for monthly, YYYY for annual)
 - **Schema evolution**: Column structures changed between 2020-2022 and 2023-2025
 - **German formatting**: Decimal separators, special characters, and encoding issues
+- **Referential Integrity**: HSN/TSN code verification across 517,656 trade names
 - **Scale complexity**: Hundreds of thousands of records across 50+ monthly datasets
 
-This project delivers a unified analytical framework for automotive market research, 
-policy analysis, and sustainability assessment.
+---
+
+## Solution Overview
+
+The KBA Market Analysis pipeline transforms raw government data into analytical-ready 
+datasets through a multi-stage ETL process:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   KBA Excel     │    │   Python ETL     │    │   PostgreSQL    │    │   Business      │
+│   Reports       │───▶   (Jupyter)       ───▶   Database       ───▶   Intelligence   │
+│                 │    │                  │    │                 │    │                 │
+│ • 111 files     │    │ • pandas         │    │ • 822K records  │    │ • Tableau       │
+│ • German format │    │ • openpyxl       │    │ • UTF-8         │    │ • Market Trends │
+│ • Multi-schema  │    │ • Date handling  │    │ • Indexed       │    │ • Competitors   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                        │
+                                ▼                        ▼
+                       ┌──────────────────┐    ┌─────────────────────┐
+                       │   CSV Storage    │    │   dbt Models        │
+                       │   (Processed)    │    │ (NOT IMPLEMENTED)   │
+                       │                  │    └─────────────────────┘
+                       │ • 15 CSV files   │
+                       │ • 822K records   │                              ┌───────────────────────────┐
+                       │ • Standardized   │────────────────────────────▶    Tableau visualization   │
+                       └──────────────────┘                              └───────────────────────────┘
+```
+
+---
+
+### Technology Stack
+- **ETL Layer**: Python 3.9.21, pandas, openpyxl, SQLAlchemy
+- **Storage**: PostgreSQL 13+ with UTF-8 collation, psycopg2-binary driver
+- **Environment**: python-dotenv for configuration management
+- **Transform**: dbt Core 1.0+ (**NOT IMPLEMENTED**)
+- **Analysis**: Jupyter Lab (8 notebooks, 27,930 total lines)
+- **Visualization**: Tableau Desktop (external integration)
+- **Orchestration**: Manual execution (**TODO**: Implement Airflow/Prefect)
 
 ---
 
@@ -110,7 +145,7 @@ kba_market_analysis/
 │   │   ├── fz8/               # Monthly registration statistics
 │   │   └── fz10/              # Regional breakdown data
 │   └── processed/             # Cleaned CSV files for analysis
-├── dbt_kba/                   # dbt project for data modeling
+├── dbt_kba/                   # dbt project for data modeling (NOT IMPLEMENTED)
 │   ├── models/                # SQL transformation models
 │   ├── macros/                # Reusable SQL functions
 │   ├── seeds/                 # Reference data (lookup tables)
@@ -123,8 +158,6 @@ kba_market_analysis/
 │   ├── _2_*.ipynb             # Data transformation processes
 │   ├── ...                    # ...
 │   └── _9_*.ipynb             # Database upload procedures
-├── scripts/                   # Automation and utility scripts
-│   └── old/                   # Deprecated/experimental code
 ├── environment.yml            # Defines the conda environment
 ├── LICENSE                    # The project’s license file
 ├── mkdocs.yml                 # Configuration file for generating project documentation
@@ -135,117 +168,7 @@ kba_market_analysis/
 
 ---
 
-## Solution Overview
-
-The KBA Market Analysis pipeline transforms raw government data into analytical-ready 
-datasets through a multi-stage ETL process:
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   KBA Excel     │    │   Python ETL     │    │   PostgreSQL    │    │   Business      │
-│   Reports       │───▶│   (Jupyter)      │───▶│   Database      │───▶│   Intelligence  │
-│                 │    │                  │    │                 │    │                 │
-│ • 111 files     │    │ • pandas         │    │ • 822K records  │    │ • Tableau       │
-│ • German format │    │ • openpyxl       │    │ • UTF-8         │    │ • Market Entry  │
-│ • Multi-schema  │    │ • Date handling  │    │ • Indexed       │    │ • Competitive   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘    └─────────────────┘
-                                │                        │
-                                ▼                        ▼
-                       ┌──────────────────┐    ┌─────────────────────┐
-                       │   CSV Storage    │    │   dbt Models        │
-                       │   (Processed)    │    │   NOT IMPLEMENTED   │
-                       │                  │    └─────────────────────┘
-                       │ • 15 CSV files   │
-                       │ • 822K records   │                              ┌───────────────────────────┐
-                       │ • Standardized   │────────────────────────────▶ │   Tableau visualization   │
-                       └──────────────────┘                              └───────────────────────────┘
-```
-
----
-
-### Technology Stack
-- **ETL Layer**: Python 3.9.21, pandas, openpyxl, SQLAlchemy
-- **Storage**: PostgreSQL 13+ with UTF-8 collation, psycopg2-binary driver
-- **Environment**: python-dotenv for configuration management
-- **Transform**: dbt Core 1.0+ (**NOT IMPLEMENTED**)
-- **Analysis**: Jupyter Lab (8 notebooks, 27,930 total lines)
-- **Visualization**: Tableau Desktop (external integration)
-- **Orchestration**: Manual execution (**TODO**: Implement Airflow/Prefect)
-
----
-
-## Quickstart
-
-### Prerequisites
-
-- **Python 3.9.21+** with pip package manager
-- **PostgreSQL 13+** database server (local or remote)
-- **Jupyter Lab**
-- **dbt Core 1.0+** for data transformation
-- **Git** for version control
-
----
-
-## Usage Guide
-
-### Production Data Processing Workflow
-
-#### Phase 1: Historical Brand Analysis
-```bash
-# 1. Legacy format processing (2020-2022)
-jupyter lab notebooks/_1_fz8_2020-2022.ipynb
-# Processes: Older Excel format, schema differences
-# Output: Standardized monthly brand statistics
-
-# 2. Modern format processing (2023-2025) 
-jupyter lab notebooks/_2_fz8_2023-2025.ipynb
-# Processes: Advanced Excel parsing, German formatting, 8 sheet types
-# Output: FZ8.2, 8.3, 8.6, 8.7, 8.8, 8.9, 8.16 series (34,850 total records)
-```
-
-#### Phase 2: Market Intelligence
-```bash
-# 3. Brand & Model Intelligence
-jupyter lab notebooks/_3_fz10.ipynb
-# Processes: Manufacturer analysis, model series
-# Output: 22,683 brand/model records, competitive positioning
-
-# 4. Regional Market Analysis  
-jupyter lab notebooks/_4_fz1.ipynb
-# Processes: Federal states, administrative regions
-# Output: 4,794 geographic records (2 datasets)
-```
-
-#### Phase 3: Advanced Analytics
-```bash
-# 5. Fuel Transition Analysis
-jupyter lab notebooks/_5_fz2.ipynb
-# Status: FULLY FUNCTIONAL - processes FZ2.2 and FZ2.4 sheets
-# Output: 155,783 fuel/demographic records across 2 datasets
-# Features: Layout validation, German text normalization, multi-file processing
-
-# 6. Commercial Vehicle Analysis
-jupyter lab notebooks/_6_fz3.ipynb
-# Status: Simple processing, fully operational
-# Output: 64,657 commercial vehicle distribution records
-```
-
-#### Phase 4: Data Warehouse Operations
-```bash
-# 7. Database Upload & Validation
-jupyter lab notebooks/_9_push_processed_data.ipynb
-# Processes: Bulk PostgreSQL upload, schema creation
-# Uses: SQLAlchemy, dotenv_values for environment configuration
-
-jupyter lab notebooks/_99_test_files_from_db.ipynb
-# Processes: Database validation, comprehensive testing
-# Uses: load_dotenv for environment configuration
-# Shows: Data types, completeness, geographic distribution validation
-```
-
----
-
-### Command Reference
+### Command & Usage
 
 | Operation | Command | Output |
 |-----------|---------|--------|
@@ -263,13 +186,16 @@ jupyter lab notebooks/_99_test_files_from_db.ipynb
 
 ## Business Applications
 
-### Market Entry Decision Support
-- **Competitive Gap Analysis**: Identify underserved SUV segments and price points
+### Key market trends in the German Automotive market
+- **Consumer preferences**: By color, size and age group
+- **Fuel type transition**: Electric and hybrid adoption dynamics
+- **Market signals**: Opportunities and entry barriers
+- **Competitive landscape**: Performance of top models by segment
 - **Geographic Prioritization**: Target federal states with favorable EV adoption
-- **Product Portfolio Planning**: Optimize model mix based on demand patterns
-- **Timing Strategy**: Leverage 2025 policy tailwinds for market entry
 
-### Sample Business Queries
+The **goal** is to derive insights that support **early-stage decision-making for a market entry strategy** by an international EV/Hybrid SUV manufacturer
+
+### Sample Business Queries (SQL)
 ```sql
 -- Market share by brand (data available in fz_08.2_raw)
 -- Note: FZ8 uses YYYYMM date format (e.g., 202212)
@@ -331,23 +257,6 @@ ORDER BY passenger_cars DESC;
 
 ---
 
-## Data Quality & Governance
-
-### Automated Validation Framework
-- **Schema Consistency**: Column types verified in database (object, int64, float64)
-- **Date Format Handling**: Multiple formats supported (YYYYMM for monthly, YYYY for annual)
-- **Business Rules**: Date ranges (2020-2025), registration count boundaries validated
-- **Referential Integrity**: HSN/TSN code verification across 517,656 trade names
-- **Data Freshness**: Monthly FZ8 updates through May 2025, annual series current
-
-### Quality Metrics Dashboard
-- **Completeness**: 822,248 / 822,248 records processed (100.0%)
-- **Accuracy**: German character encoding validated across all datasets  
-- **Consistency**: Schema evolution handled between time periods
-- **Geographic Coverage**: 16 federal states, 806 administrative regions covered
-- **Temporal Coverage**: 6 years (2020-2025) with monthly granularity where applicable
-
----
 
 ## License & Data Attribution
 

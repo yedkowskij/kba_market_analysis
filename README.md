@@ -63,7 +63,7 @@ datasets through a multi-stage ETL process:
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   KBA Excel     │    │   Python ETL     │    │   PostgreSQL    │    │   Business      │
-│   Reports       │───▶   (Jupyter)       ───▶   Database       ───▶   Intelligence   │
+│   Reports       │───▶|   (Jupyter)      |───▶|   Database      |───▶|  Intelligence   │
 │                 │    │                  │    │                 │    │                 │
 │ • 111 files     │    │ • pandas         │    │ • 822K records  │    │ • Tableau       │
 │ • German format │    │ • openpyxl       │    │ • UTF-8         │    │ • Market Trends │
@@ -76,9 +76,9 @@ datasets through a multi-stage ETL process:
                        │   (Processed)    │    │ (NOT IMPLEMENTED)   │
                        │                  │    └─────────────────────┘
                        │ • 15 CSV files   │
-                       │ • 822K records   │                              ┌───────────────────────────┐
-                       │ • Standardized   │────────────────────────────▶    Tableau visualization   │
-                       └──────────────────┘                              └───────────────────────────┘
+                       │ • 822K records   │                  ┌───────────────────────────┐
+                       │ • Standardized   │─────────────────▶|   Tableau visualization   │
+                       └──────────────────┘                  └───────────────────────────┘
 ```
 
 ---
@@ -90,7 +90,6 @@ datasets through a multi-stage ETL process:
 - **Transform**: dbt Core 1.0+ (**NOT IMPLEMENTED**)
 - **Analysis**: Jupyter Lab (8 notebooks, 27,930 total lines)
 - **Visualization**: Tableau Desktop (external integration)
-- **Orchestration**: Manual execution (**TODO**: Implement Airflow/Prefect)
 
 ---
 
@@ -161,11 +160,9 @@ kba_market_analysis/
 │   ├── _2_*.ipynb             # Data transformation processes
 │   ├── ...                    # ...
 │   └── _9_*.ipynb             # Database upload procedures
-├── environment.yml            # Defines the conda environment
 ├── LICENSE                    # The project’s license file
-├── mkdocs.yml                 # Configuration file for generating project documentation
-├── pyproject.toml             # Modern Python packaging configuration file
 ├── requirements.txt           # Standard list of Python dependencies for pip
+├── motivation.md              # Project motivation
 └── README.md                  # This file
 ```
 

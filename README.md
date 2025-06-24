@@ -139,32 +139,33 @@ datasets through a multi-stage ETL process:
 
 ```
 kba_market_analysis/
-├── data/                      # Data storage (gitignored for size)
-│   ├── raw/                   # Original Excel/PDF files from KBA
-│   │   ├── fz1/               # Vehicle stock by make/model
-│   │   ├── fz2/               # New registrations by fuel type
-│   │   ├── fz3/               # Commercial vehicle registrations  
-│   │   ├── fz8/               # Monthly registration statistics
-│   │   └── fz10/              # Regional breakdown data
-│   └── processed/             # Cleaned CSV files for analysis
-├── dbt_kba/                   # dbt project for data modeling (NOT IMPLEMENTED)
-│   ├── models/                # SQL transformation models
-│   ├── macros/                # Reusable SQL functions
-│   ├── seeds/                 # Reference data (lookup tables)
-│   └── dbt_project.yml        # dbt project configuration
-│   └── README.md              # dbt project README file
-├── docs/                      # Project documentation
-│   ├── data-dictionary.md     # field definitions and relationships
-├── notebooks/                 # Jupyter analysis notebooks
-│   ├── _1_*.ipynb             # Data extraction workflows
-│   ├── _2_*.ipynb             # Data transformation processes
-│   ├── ...                    # ...
-│   └── _9_*.ipynb             # Database upload procedures
-├── tableau/                   # Tableau analysis workbooks
-├── LICENSE                    # The project’s license file
-├── requirements.txt           # Standard list of Python dependencies for pip
-├── motivation.md              # Project motivation
-└── README.md                  # This file
+├── data/                       # Data storage (gitignored for size)
+│   ├── raw/                    # Original Excel/PDF files from KBA
+│   │   ├── fz1/                # Vehicle stock by make/model
+│   │   ├── fz2/                # New registrations by fuel type
+│   │   ├── fz3/                # Commercial vehicle registrations  
+│   │   ├── fz8/                # Monthly registration statistics
+│   │   └── fz10/               # Regional breakdown data
+│   └── processed/              # Cleaned CSV files for analysis
+├── dbt_kba/                    # dbt project for data modeling (NOT IMPLEMENTED)
+│   ├── models/                 # SQL transformation models
+│   ├── macros/                 # Reusable SQL functions
+│   ├── seeds/                  # Reference data (lookup tables)
+│   └── dbt_project.yml         # dbt project configuration
+│   └── README.md               # dbt project README file
+├── docs/                       # Project documentation
+│   ├── data-dictionary.md      # field definitions and relationships
+├── notebooks/                  # Jupyter analysis notebooks
+│   ├── _1_*.ipynb              # Data extraction workflows
+│   ├── _2_*.ipynb              # Data transformation processes
+│   ├── ...                     # ...
+│   └── _9_*.ipynb              # Database upload procedures
+├── tableau/                    # Tableau analysis workbooks
+├── LICENSE                     # The project’s license file
+├── requirements.txt            # Standard list of Python dependencies for pip
+├── presentation_slides.pdf     # Final presentation
+├── motivation.md               # Project motivation
+└── README.md                   # This file
 ```
 
 ---
@@ -234,7 +235,6 @@ ORDER BY total_registrations DESC;
 ```
 
 ---
-
 
 ## License & Data Attribution
 
